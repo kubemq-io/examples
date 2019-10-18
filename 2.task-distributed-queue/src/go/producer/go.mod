@@ -1,4 +1,4 @@
-module github.com/kubemq-io/examples/1.multi-stage-data-pipeline/src/go/producer
+module github.com/kubemq-io/examples/2.task-distributed-queue/src/go/producer
 
 go 1.13
 

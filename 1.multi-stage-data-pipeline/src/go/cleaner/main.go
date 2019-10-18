@@ -14,7 +14,7 @@ var (
 	kubemqHost    = flag.String("kubemq-host", "localhost", "set KubeMQ server gRPC host address")
 	kubemqPort    = flag.Int("kubemq-port", 50000, "set KubeMQ server gRPC port")
 	incomingQueue = flag.String("incoming-queue", "pipeline.cleaner", "set pipeline cleaner queue name")
-	name          = flag.String("name", "cleaner-1", "set worker name")
+	name          = flag.String("name", "cleaner-1", "set consumer name")
 )
 
 func main() {
@@ -35,7 +35,7 @@ func main() {
 	log.Printf("cleaner (%s) connected to KubeMQ, receiving messages from queue: %s, printing it and ack them. \n", *name, *incomingQueue)
 	go func() {
 
-		// starting worker go routine
+		// starting consumer go routine
 		for {
 			select {
 			case <-ctx.Done():

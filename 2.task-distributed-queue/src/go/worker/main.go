@@ -24,7 +24,7 @@ var (
 	kubemqPort = flag.Int("kubemq-port", 50000, "set KubeMQ server gRPC port")
 	taskQueue  = flag.String("task-queue", "task.queue", "set task queue name")
 	taskChar   = flag.String("count-string", "a", "set the string for counting")
-	name       = flag.String("name", "worker-1", "set worker name")
+	name       = flag.String("name", "consumer-1", "set consumer name")
 )
 
 func processTask(data []byte) error {
@@ -43,7 +43,7 @@ func main() {
 	shutdown := make(chan os.Signal, 1)
 	signal.Notify(shutdown, syscall.SIGINT, syscall.SIGTERM)
 
-	// creating a worker client
+	// creating a consumer client
 	worker, err := kubemq.NewClient(ctx,
 		kubemq.WithAddress(*kubemqHost, *kubemqPort),
 		kubemq.WithClientId(*name),
@@ -55,9 +55,9 @@ func main() {
 	}
 	defer worker.Close()
 
-	log.Printf("worker (%s) connected to KubeMQ, receiving tasks from queue: %s. \n", *name, *taskQueue)
+	log.Printf("consumer (%s) connected to KubeMQ, receiving tasks from queue: %s. \n", *name, *taskQueue)
 
-	// starting worker go routine
+	// starting consumer go routine
 	go func() {
 
 		for {
@@ -94,7 +94,7 @@ func main() {
 		}
 	}()
 	<-shutdown
-	log.Println("shutdown worker completed")
+	log.Println("shutdown consumer completed")
 }
 
 func init() {

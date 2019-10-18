@@ -1,4 +1,4 @@
-module github.com/kubemq-io/examples/1.multi-stage-data-pipeline/src/go/processor
+module github.com/kubemq-io/examples/2.task-distributed-queue/src/go/worker
 
 go 1.13
 
