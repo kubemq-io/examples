@@ -22,11 +22,11 @@ type Message struct {
 }
 
 var (
-	kubemqHost    = flag.String("kubemq-host", "localhost", "set KubeMQ server gRPC host address")
-	kubemqPort    = flag.Int("kubemq-port", 50000, "set KubeMQ server gRPC port")
-	sendQueue     = flag.String("send-queue", "pipeline.stage.1", "set start pipeline queue name")
-	sendIntervael = flag.Duration("interval", time.Duration(5*time.Second), "set sending interval duration")
-	name          = flag.String("name", "producer-1", "set producer name")
+	kubemqHost   = flag.String("kubemq-host", "localhost", "set KubeMQ server gRPC host address")
+	kubemqPort   = flag.Int("kubemq-port", 50000, "set KubeMQ server gRPC port")
+	sendQueue    = flag.String("send-queue", "pipeline.stage.1", "set start pipeline queue name")
+	sendInterval = flag.Duration("interval", time.Duration(5*time.Second), "set sending interval duration")
+	name         = flag.String("name", "producer-1", "set producer name")
 )
 
 func getNewMessage(cnt int) []byte {
@@ -55,7 +55,7 @@ func main() {
 	}
 	defer producer.Close()
 
-	log.Printf("producer connected to KubeMQ, sending messages to queue: %s in intervals of %s \n", *sendQueue, *sendIntervael)
+	log.Printf("producer connected to KubeMQ, sending messages to queue: %s in intervals of %s \n", *sendQueue, *sendInterval)
 
 	// listening to CTRL-C
 	shutdown := make(chan os.Signal, 1)
@@ -63,7 +63,7 @@ func main() {
 
 	go func() {
 		cnt := 0
-		ticker := time.NewTicker(*sendIntervael)
+		ticker := time.NewTicker(*sendInterval)
 		for {
 			select {
 			case <-ticker.C:
