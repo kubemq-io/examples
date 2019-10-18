@@ -23,7 +23,7 @@ var (
 	kubemqPort    = flag.Int("kubemq-port", 50000, "set KubeMQ server gRPC port")
 	incomingQueue = flag.String("incoming-queue", "pipeline.stage.1", "set incoming pipeline queue name")
 	outgoingQueue = flag.String("outgoing-queue", "pipeline.stage.2", "set outgoing pipeline queue name")
-	name          = flag.String("name", "processor-1", "set processor name")
+	name          = flag.String("name", "worker-1", "set worker name")
 )
 
 func getMessageToProcess(data []byte) (*Message, error) {
@@ -41,7 +41,7 @@ func main() {
 	shutdown := make(chan os.Signal, 1)
 	signal.Notify(shutdown, syscall.SIGINT, syscall.SIGTERM)
 
-	// creating a processor client
+	// creating a worker client
 	processor, err := kubemq.NewClient(ctx,
 		kubemq.WithAddress(*kubemqHost, *kubemqPort),
 		kubemq.WithClientId(*name),
@@ -54,12 +54,12 @@ func main() {
 	defer processor.Close()
 
 	if *outgoingQueue != "" {
-		log.Printf("receiver (%s) connected to KubeMQ, receiving messages from queue: %s , processing it and sending to %s. \n", *name, *incomingQueue, *outgoingQueue)
+		log.Printf("processor (%s) connected to KubeMQ, receiving messages from queue: %s , processing it and sending to %s. \n", *name, *incomingQueue, *outgoingQueue)
 	} else {
-		log.Printf("receiver (%s) connected to KubeMQ, receiving messages from queue: %s , processing it and ack the message. \n", *name, *incomingQueue)
+		log.Printf("processor (%s) connected to KubeMQ, receiving messages from queue: %s , processing it and ack the message. \n", *name, *incomingQueue)
 	}
 
-	// starting processor go routine
+	// starting worker go routine
 	go func() {
 
 		for {
@@ -118,7 +118,7 @@ func main() {
 	}()
 
 	<-shutdown
-	log.Println("shutdown processor completed")
+	log.Println("shutdown worker completed")
 }
 
 func init() {
