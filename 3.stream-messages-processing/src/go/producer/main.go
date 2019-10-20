@@ -28,7 +28,7 @@ var (
 	streamChannel     = flag.String("channel", "stream.channel", "set stream channel name")
 	streamWorkerCount = flag.Int("count", 1, "set how many concurrent streams")
 	streamInterval    = flag.Duration("interval", time.Second*5, "set message interval duration")
-	name              = flag.String("name", "producer-1", "set producer name")
+	name              = flag.String("name", "scraper-1", "set scraper name")
 )
 
 func getRandomString(length int64) string {
@@ -72,7 +72,7 @@ func main() {
 			}
 			defer producer.Close()
 
-			log.Printf("producer %s connected to KubeMQ, sending messages to %s channel with inteval of %s.\n", producerName, *streamChannel, *streamInterval)
+			log.Printf("scraper %s connected to KubeMQ, sending messages to %s channel with inteval of %s.\n", producerName, *streamChannel, *streamInterval)
 
 			cnt := 0
 			ticker := time.NewTicker(*streamInterval)
@@ -108,7 +108,7 @@ func main() {
 
 	}
 	<-shutdown
-	log.Println("shutdown producer completed")
+	log.Println("shutdown scraper completed")
 }
 
 func init() {

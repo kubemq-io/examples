@@ -25,7 +25,7 @@ var (
 	sendQueue      = flag.String("send-queue", "task.queue", "set task queue channel name")
 	sendTasksCount = flag.Int("count", 1, "set how many tasks to send")
 	sendTaskLength = flag.Int64("length", 1000, "set size of task data in bytes")
-	name           = flag.String("name", "producer-1", "set producer name")
+	name           = flag.String("name", "scraper-1", "set scraper name")
 )
 
 func getRandomString(length int64) string {
@@ -63,11 +63,11 @@ func main() {
 	}
 	defer producer.Close()
 
-	log.Printf("producer connected to KubeMQ, sending %d tasks with data lenght of %d bytes to queue: %s \n", *sendTasksCount, *sendTaskLength, *sendQueue)
+	log.Printf("scraper connected to KubeMQ, sending %d tasks with data lenght of %d bytes to queue: %s \n", *sendTasksCount, *sendTaskLength, *sendQueue)
 
 	for i := 0; i < *sendTasksCount; i++ {
 		sendResult, err := producer.NewQueueMessage().
-			SetId(fmt.Sprintf("producer.%s.task-%d", *name, i)).
+			SetId(fmt.Sprintf("scraper.%s.task-%d", *name, i)).
 			SetChannel(*sendQueue).
 			SetBody(getTask(*sendTaskLength)).
 			Send(ctx)
@@ -84,7 +84,7 @@ func main() {
 		}
 
 	}
-	log.Println("task producer completed")
+	log.Println("task scraper completed")
 }
 
 func init() {
