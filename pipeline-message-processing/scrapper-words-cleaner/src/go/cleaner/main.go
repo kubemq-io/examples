@@ -13,7 +13,7 @@ import (
 var (
 	kubemqHost    = flag.String("kubemq-host", "localhost", "set KubeMQ server gRPC host address")
 	kubemqPort    = flag.Int("kubemq-port", 50000, "set KubeMQ server gRPC port")
-	incomingQueue = flag.String("incoming-queue", "pipeline.cleaner", "set pipeline cleaner queue name")
+	incomingQueue = flag.String("queue-in", "cleaner", "set pipeline cleaner queue name")
 	name          = flag.String("name", "cleaner-1", "set consumer name")
 )
 
@@ -51,7 +51,7 @@ func main() {
 				// if we don't have messages to process then we continue and try again
 				continue
 			}
-			log.Printf("message received: %s", string(queueMessage.Body))
+			log.Printf("message received with size %d, cleaned.", len(queueMessage.Body))
 			err = queueMessage.Ack()
 			if err != nil {
 				log.Fatalf("cannot ack a queue message, error: %s", err.Error())
@@ -68,5 +68,4 @@ func main() {
 
 func init() {
 	flag.Parse()
-
 }
